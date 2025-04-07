@@ -15,7 +15,56 @@
     <div class="flex h-screen">
         <!-- Sidebar será implementada depois -->
         <div class="w-64 bg-blue-800 text-white p-4" id="sidebar">
-            <!-- Conteúdo será carregado via JS -->
+            <!-- Dentro da div#sidebar -->
+            <div class="text-2xl font-bold mb-8">Dashboard Vendas</div>
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="flex items-center p-2 bg-blue-700 rounded-lg">
+                            <span class="ml-3">Visão Geral</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="comparacao.html" class="flex items-center p-2 hover:bg-blue-700 rounded-lg">
+                            <span class="ml-3">Comparação Anual</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="metas.html" class="flex items-center p-2 hover:bg-blue-700 rounded-lg">
+                            <span class="ml-3">Sugestão de Metas</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="mt-8">
+                <div class="text-sm uppercase text-blue-200 mb-2">Filtros</div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm mb-1">Filial</label>
+                        <select id="filial-filter" class="w-full bg-blue-700 border border-blue-600 rounded p-2 text-sm">
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Setor</label>
+                        <select id="setor-filter" class="w-full bg-blue-700 border border-blue-600 rounded p-2 text-sm" disabled>
+                            <option value="">Selecione uma filial primeiro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Departamento</label>
+                        <select id="departamento-filter" class="w-full bg-blue-700 border border-blue-600 rounded p-2 text-sm" disabled>
+                            <option value="">Selecione um setor primeiro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Seção</label>
+                        <select id="secao-filter" class="w-full bg-blue-700 border border-blue-600 rounded p-2 text-sm" disabled>
+                            <option value="">Selecione um departamento primeiro</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Main Content -->

@@ -13,6 +13,12 @@ const Dashboard = {
       sales: null,
       departments: null,
       weekday: null
+  },
+  filters: {
+    filial: document.getElementById('filial-filter'),
+    setor: document.getElementById('setor-filter'),
+    departamento: document.getElementById('departamento-filter'),
+    secao: document.getElementById('secao-filter')
   }
 };
 
@@ -77,10 +83,47 @@ function updateDate() {
   document.getElementById('update-date').textContent = `Atualizado em: ${formattedDate}`;
 }
 
-// Função para inicializar os filtros (será implementada no próximo passo)
+// Substituir a função initializeFilters() por:
 function initializeFilters() {
-  console.log('Inicializando filtros...');
-  // Implementação virá aqui
+  // Popular o filtro de filiais
+  populateFilialFilter();
+  
+  // Adicionar event listeners
+  Dashboard.filters.filial.addEventListener('change', (e) => {
+      Dashboard.currentFilters.filial = e.target.value;
+      Dashboard.currentFilters.setor = null;
+      Dashboard.currentFilters.departamento = null;
+      Dashboard.currentFilters.secao = null;
+      
+      populateSetorFilter(e.target.value);
+      updateDashboard();
+  });
+  
+  Dashboard.filters.setor.addEventListener('change', (e) => {
+      Dashboard.currentFilters.setor = e.target.value;
+      Dashboard.currentFilters.departamento = null;
+      Dashboard.currentFilters.secao = null;
+      
+      populateDepartamentoFilter(Dashboard.currentFilters.filial, e.target.value);
+      updateDashboard();
+  });
+  
+  Dashboard.filters.departamento.addEventListener('change', (e) => {
+      Dashboard.currentFilters.departamento = e.target.value;
+      Dashboard.currentFilters.secao = null;
+      
+      populateSecaoFilter(
+          Dashboard.currentFilters.filial, 
+          Dashboard.currentFilters.setor, 
+          e.target.value
+      );
+      updateDashboard();
+  });
+  
+  Dashboard.filters.secao.addEventListener('change', (e) => {
+      Dashboard.currentFilters.secao = e.target.value;
+      updateDashboard();
+  });
 }
 
 // Função para carregar dados iniciais
@@ -93,8 +136,8 @@ function loadInitialData() {
 }
 
 // Função para atualizar os cards de resumo
-function updateSummaryCards() {
-  const resumo = Dashboard.data.filiais[0].resumo['2025'];
+function updateSummaryCards(filteredData = Dashboard.data) {
+  const resumo = filteredData.filiais[0].resumo['2025'];
   
   const cardsData = [
       {
@@ -190,11 +233,11 @@ function getIconSVG(icon, color) {
 }
 
 // Função para atualizar a tabela de produtos
-function updateProductsTable() {
+function updateProductsTable(filteredData = Dashboard.data) {
   const tableBody = document.getElementById('products-table-body');
   tableBody.innerHTML = '';
   
-  Dashboard.data.top_produtos.forEach(product => {
+  filteredData.top_produtos.forEach(product => {
       const row = document.createElement('tr');
       row.innerHTML = `
           <td class="px-6 py-4 whitespace-nowrap">${product.nome}</td>
@@ -211,4 +254,214 @@ function updateProductsTable() {
 function initializeCharts() {
   console.log('Inicializando gráficos...');
   // Implementação virá aqui
+}
+
+// *****************************************************************************
+
+// Funções para popular os filtros
+function populateFilialFilter() {
+  const filialSelect = Dashboard.filters.filial;
+  filialSelect.innerHTML = '<option value="">Todas Filiais</option>';
+  
+  Dashboard.data.filiais.forEach(filial => {
+      const option = document.createElement('option');
+      option.value = filial.id;
+      option.textContent = filial.nome;
+      filialSelect.appendChild(option);
+  });
+}
+
+function populateSetorFilter(filialId) {
+  const setorSelect = Dashboard.filters.setor;
+  setorSelect.innerHTML = '<option value="">Todos Setores</option>';
+  setorSelect.disabled = true;
+  
+  if (!filialId) return;
+  
+  const filial = Dashboard.data.filiais.find(f => f.id == filialId);
+  if (!filial) return;
+  
+  filial.setores.forEach(setor => {
+      const option = document.createElement('option');
+      option.value = setor.id;
+      option.textContent = setor.nome;
+      setorSelect.appendChild(option);
+  });
+  
+  setorSelect.disabled = false;
+}
+
+function populateDepartamentoFilter(filialId, setorId) {
+  const deptoSelect = Dashboard.filters.departamento;
+  deptoSelect.innerHTML = '<option value="">Todos Departamentos</option>';
+  deptoSelect.disabled = true;
+  
+  if (!filialId || !setorId) return;
+  
+  const filial = Dashboard.data.filiais.find(f => f.id == filialId);
+  if (!filial) return;
+  
+  const setor = filial.setores.find(s => s.id == setorId);
+  if (!setor) return;
+  
+  setor.departamentos.forEach(depto => {
+      const option = document.createElement('option');
+      option.value = depto.id;
+      option.textContent = depto.nome;
+      deptoSelect.appendChild(option);
+  });
+  
+  deptoSelect.disabled = false;
+}
+
+function populateSecaoFilter(filialId, setorId, deptoId) {
+  const secaoSelect = Dashboard.filters.secao;
+  secaoSelect.innerHTML = '<option value="">Todas Seções</option>';
+  secaoSelect.disabled = true;
+  
+  if (!filialId || !setorId || !deptoId) return;
+  
+  const filial = Dashboard.data.filiais.find(f => f.id == filialId);
+  if (!filial) return;
+  
+  const setor = filial.setores.find(s => s.id == setorId);
+  if (!setor) return;
+  
+  const depto = setor.departamentos.find(d => d.id == deptoId);
+  if (!depto) return;
+  
+  depto.secoes.forEach(secao => {
+      const option = document.createElement('option');
+      option.value = secao.id;
+      option.textContent = secao.nome;
+      secaoSelect.appendChild(option);
+  });
+  
+  secaoSelect.disabled = false;
+}
+
+// Função para atualizar o dashboard com os filtros aplicados
+function updateDashboard() {
+  // Obter os dados filtrados
+  const filteredData = getFilteredData();
+  
+  // Atualizar os componentes com os dados filtrados
+  updateSummaryCards(filteredData);
+  updateProductsTable(filteredData);
+  updateCharts(filteredData);
+}
+
+// Função para obter dados filtrados
+function getFilteredData() {
+  // Se nenhum filtro está aplicado, retornar todos os dados
+  if (!Dashboard.currentFilters.filial) {
+      return Dashboard.data;
+  }
+  
+  // Encontrar a filial selecionada
+  const filial = Dashboard.data.filiais.find(f => f.id == Dashboard.currentFilters.filial);
+  if (!filial) return Dashboard.data;
+  
+  // Se apenas filial está filtrada
+  if (!Dashboard.currentFilters.setor) {
+      return {
+          ...Dashboard.data,
+          filiais: [filial],
+          top_produtos: Dashboard.data.top_produtos // Manter todos os produtos por enquanto
+      };
+  }
+  
+  // Encontrar o setor selecionado
+  const setor = filial.setores.find(s => s.id == Dashboard.currentFilters.setor);
+  if (!setor) return {
+      ...Dashboard.data,
+      filiais: [{
+          ...filial,
+          setores: []
+      }]
+  };
+  
+  // Se apenas filial e setor estão filtrados
+  if (!Dashboard.currentFilters.departamento) {
+      return {
+          ...Dashboard.data,
+          filiais: [{
+              ...filial,
+              setores: [setor]
+          }],
+          top_produtos: Dashboard.data.top_produtos // Filtraremos melhor depois
+      };
+  }
+  
+  // Encontrar o departamento selecionado
+  const departamento = setor.departamentos.find(d => d.id == Dashboard.currentFilters.departamento);
+  if (!departamento) return {
+      ...Dashboard.data,
+      filiais: [{
+          ...filial,
+          setores: [{
+              ...setor,
+              departamentos: []
+          }]
+      }]
+  };
+  
+  // Se apenas filial, setor e departamento estão filtrados
+  if (!Dashboard.currentFilters.secao) {
+      return {
+          ...Dashboard.data,
+          filiais: [{
+              ...filial,
+              setores: [{
+                  ...setor,
+                  departamentos: [departamento]
+              }]
+          }],
+          top_produtos: Dashboard.data.top_produtos.filter(p => 
+              p.departamento === departamento.nome
+          )
+      };
+  }
+  
+  // Encontrar a seção selecionada
+  const secao = departamento.secoes.find(s => s.id == Dashboard.currentFilters.secao);
+  if (!secao) return {
+      ...Dashboard.data,
+      filiais: [{
+          ...filial,
+          setores: [{
+              ...setor,
+              departamentos: [{
+                  ...departamento,
+                  secoes: []
+              }]
+          }]
+      }]
+  };
+  
+  // Filtro completo aplicado
+  return {
+      ...Dashboard.data,
+      filiais: [{
+          ...filial,
+          setores: [{
+              ...setor,
+              departamentos: [{
+                  ...departamento,
+                  secoes: [secao]
+              }]
+          }]
+      }],
+      top_produtos: Dashboard.data.top_produtos.filter(p => 
+          p.departamento === departamento.nome
+          // Aqui você pode adicionar mais condições para filtrar por seção se necessário
+      )
+  };
+}
+
+
+// Adicionar esta nova função (implementaremos os gráficos depois)
+function updateCharts(filteredData) {
+  console.log('Atualizando gráficos com dados filtrados...');
+  // Implementação virá depois
 }
