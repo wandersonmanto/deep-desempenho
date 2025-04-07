@@ -1,0 +1,133 @@
+{
+  "filiais": [
+    {
+      "id": 1,
+      "nome": "ELETRO BRASIL LTDA",
+      "setores": [
+        {
+          "id": 1,
+          "nome": "REPOSICAO",
+          "departamentos": [
+            {
+              "id": 36,
+              "nome": "LIMPEZA",
+              "secoes": [
+                {
+                  "id": 1310,
+                  "nome": "ACESSORIO P/ ROUPA",
+                  "vendas": {
+                    "2023": {
+                      "mensal": [120000, 110000, 130000, 125000, 140000, 135000, 150000, 145000, 130000, 140000, 150000, 180000],
+                      "diario": {
+                        "quantidade": [150, 180, 160, 170, 190, 200, 210],
+                        "venda_liq": [12000, 15000, 14000, 16000, 18000, 20000, 22000]
+                      }
+                    },
+                    "2024": {
+                      "mensal": [130000, 120000, 140000, 135000, 150000, 145000, 160000, 155000, 140000, 150000, 160000, 190000],
+                      "diario": {
+                        "quantidade": [160, 190, 170, 180, 200, 210, 220],
+                        "venda_liq": [13000, 16000, 15000, 17000, 19000, 21000, 23000]
+                      }
+                    },
+                    "2025": {
+                      "mensal": [124567, 118000, 128000, 135000, 140000, 145000, null, null, null, null, null, null],
+                      "diario": {
+                        "quantidade": [170, 200, 180, 190, 210, 220, 230],
+                        "venda_liq": [14000, 17000, 16000, 18000, 20000, 22000, 24000]
+                      }
+                    }
+                  },
+                  "produtos": [
+                    {
+                      "id": 300,
+                      "nome": "Produto A",
+                      "quantidade": 1245,
+                      "venda_liq": 12456,
+                      "lucro_liq": 3456,
+                      "preco": 2.67,
+                      "custo": 1.57
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "resumo": {
+        "2025": {
+          "venda_liq": 1245678,
+          "lucro_liq": 345789,
+          "margem": 27.8,
+          "quantidade": 24567,
+          "variacao": {
+            "venda_liq": 12,
+            "lucro_liq": 8,
+            "margem": -1.2,
+            "quantidade": 15
+          }
+        }
+      }
+    }
+  ],
+  "top_departamentos": [
+    {
+      "nome": "LIMPEZA",
+      "lucro_liq": 50000
+    },
+    {
+      "nome": "ELETRO",
+      "lucro_liq": 45000
+    },
+    {
+      "nome": "COZINHA",
+      "lucro_liq": 40000
+    },
+    {
+      "nome": "ROUPAS",
+      "lucro_liq": 35000
+    },
+    {
+      "nome": "MÓVEIS",
+      "lucro_liq": 30000
+    }
+  ],
+  "top_produtos": [
+    {
+      "nome": "Produto A",
+      "departamento": "LIMPEZA",
+      "quantidade": 1245,
+      "venda_liq": 12456,
+      "lucro": 3456
+    },
+    {
+      "nome": "Produto B",
+      "departamento": "ELETRO",
+      "quantidade": 1100,
+      "venda_liq": 11000,
+      "lucro": 3000
+    },
+    {
+      "nome": "Produto C",
+      "departamento": "COZINHA",
+      "quantidade": 980,
+      "venda_liq": 9800,
+      "lucro": 2500
+    },
+    {
+      "nome": "Produto D",
+      "departamento": "ROUPAS",
+      "quantidade": 850,
+      "venda_liq": 8500,
+      "lucro": 2000
+    },
+    {
+      "nome": "Produto E",
+      "departamento": "MÓVEIS",
+      "quantidade": 750,
+      "venda_liq": 7500,
+      "lucro": 1800
+    }
+  ]
+}
