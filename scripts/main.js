@@ -1,24 +1,12 @@
 // scripts/main.js
 
-// Objeto global para armazenar os dados e estado do dashboard
+// Configuração inicial do Dashboard
 const Dashboard = {
   data: null,
-  currentFilters: {
-      filial: null,
-      setor: null,
-      departamento: null,
-      secao: null
-  },
   charts: {
-      sales: null,
-      departments: null,
-      weekday: null
-  },
-  filters: {
-    filial: document.getElementById('filial-filter'),
-    setor: document.getElementById('setor-filter'),
-    departamento: document.getElementById('departamento-filter'),
-    secao: document.getElementById('secao-filter')
+    sales: null,
+    departments: null,
+    weekday: null
   }
 };
 
@@ -30,18 +18,24 @@ document.addEventListener('DOMContentLoaded', async function() {
       
       // Carregar os dados
       Dashboard.data = await loadData();
-      
-      // Inicializar os filtros
-      initializeFilters();
-      
-      // Atualizar a data de atualização
+
+      // Inicializa os filtros
+      Dashboard.filters = new SidebarFilters(Dashboard.data);
+
+      // Configura o callback quando filtros mudam
+      Dashboard.filters.onFilterChange = (filters) => {
+        updateDashboard(filters);
+      };
+
+      // Inicia o sistema de filtros
+      Dashboard.filters.init();
+
+      // Restante da inicialização...
       updateDate();
+      initializeCharts();
       
       // Carregar os dados iniciais
-      loadInitialData();
-      
-      // Inicializar os gráficos
-      initializeCharts();
+      // loadInitialData();
       
   } catch (error) {
       console.error('Erro ao carregar o dashboard:', error);
@@ -83,48 +77,7 @@ function updateDate() {
   document.getElementById('update-date').textContent = `Atualizado em: ${formattedDate}`;
 }
 
-// Substituir a função initializeFilters() por:
-function initializeFilters() {
-  // Popular o filtro de filiais
-  populateFilialFilter();
-  
-  // Adicionar event listeners
-  Dashboard.filters.filial.addEventListener('change', (e) => {
-      Dashboard.currentFilters.filial = e.target.value;
-      Dashboard.currentFilters.setor = null;
-      Dashboard.currentFilters.departamento = null;
-      Dashboard.currentFilters.secao = null;
-      
-      populateSetorFilter(e.target.value);
-      updateDashboard();
-  });
-  
-  Dashboard.filters.setor.addEventListener('change', (e) => {
-      Dashboard.currentFilters.setor = e.target.value;
-      Dashboard.currentFilters.departamento = null;
-      Dashboard.currentFilters.secao = null;
-      
-      populateDepartamentoFilter(Dashboard.currentFilters.filial, e.target.value);
-      updateDashboard();
-  });
-  
-  Dashboard.filters.departamento.addEventListener('change', (e) => {
-      Dashboard.currentFilters.departamento = e.target.value;
-      Dashboard.currentFilters.secao = null;
-      
-      populateSecaoFilter(
-          Dashboard.currentFilters.filial, 
-          Dashboard.currentFilters.setor, 
-          e.target.value
-      );
-      updateDashboard();
-  });
-  
-  Dashboard.filters.secao.addEventListener('change', (e) => {
-      Dashboard.currentFilters.secao = e.target.value;
-      updateDashboard();
-  });
-}
+// ************************************* PAUSED ****************************************
 
 // Função para carregar dados iniciais
 function loadInitialData() {
@@ -250,6 +203,8 @@ function updateProductsTable(filteredData = Dashboard.data) {
   });
 }
 
+// ************************************* PAUSED ****************************************
+
 // Função para inicializar os gráficos (será implementada mais tarde)
 function initializeCharts() {
   console.log('Inicializando gráficos...');
@@ -257,88 +212,6 @@ function initializeCharts() {
 }
 
 // *****************************************************************************
-
-// Funções para popular os filtros
-function populateFilialFilter() {
-  const filialSelect = Dashboard.filters.filial;
-  filialSelect.innerHTML = '<option value="">Todas Filiais</option>';
-  
-  Dashboard.data.filiais.forEach(filial => {
-      const option = document.createElement('option');
-      option.value = filial.id;
-      option.textContent = filial.nome;
-      filialSelect.appendChild(option);
-  });
-}
-
-function populateSetorFilter(filialId) {
-  const setorSelect = Dashboard.filters.setor;
-  setorSelect.innerHTML = '<option value="">Todos Setores</option>';
-  setorSelect.disabled = true;
-  
-  if (!filialId) return;
-  
-  const filial = Dashboard.data.filiais.find(f => f.id == filialId);
-  if (!filial) return;
-  
-  filial.setores.forEach(setor => {
-      const option = document.createElement('option');
-      option.value = setor.id;
-      option.textContent = setor.nome;
-      setorSelect.appendChild(option);
-  });
-  
-  setorSelect.disabled = false;
-}
-
-function populateDepartamentoFilter(filialId, setorId) {
-  const deptoSelect = Dashboard.filters.departamento;
-  deptoSelect.innerHTML = '<option value="">Todos Departamentos</option>';
-  deptoSelect.disabled = true;
-  
-  if (!filialId || !setorId) return;
-  
-  const filial = Dashboard.data.filiais.find(f => f.id == filialId);
-  if (!filial) return;
-  
-  const setor = filial.setores.find(s => s.id == setorId);
-  if (!setor) return;
-  
-  setor.departamentos.forEach(depto => {
-      const option = document.createElement('option');
-      option.value = depto.id;
-      option.textContent = depto.nome;
-      deptoSelect.appendChild(option);
-  });
-  
-  deptoSelect.disabled = false;
-}
-
-function populateSecaoFilter(filialId, setorId, deptoId) {
-  const secaoSelect = Dashboard.filters.secao;
-  secaoSelect.innerHTML = '<option value="">Todas Seções</option>';
-  secaoSelect.disabled = true;
-  
-  if (!filialId || !setorId || !deptoId) return;
-  
-  const filial = Dashboard.data.filiais.find(f => f.id == filialId);
-  if (!filial) return;
-  
-  const setor = filial.setores.find(s => s.id == setorId);
-  if (!setor) return;
-  
-  const depto = setor.departamentos.find(d => d.id == deptoId);
-  if (!depto) return;
-  
-  depto.secoes.forEach(secao => {
-      const option = document.createElement('option');
-      option.value = secao.id;
-      option.textContent = secao.nome;
-      secaoSelect.appendChild(option);
-  });
-  
-  secaoSelect.disabled = false;
-}
 
 // Função para atualizar o dashboard com os filtros aplicados
 function updateDashboard() {
