@@ -3,11 +3,8 @@
 // Configuração inicial do Dashboard
 const Dashboard = {
   data: null,
-  charts: {
-    sales: null,
-    departments: null,
-    weekday: null
-  }
+  charts: null,
+  filters: null
 };
 
 // Função principal que será executada quando o DOM estiver pronto
@@ -21,26 +18,29 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       // Inicializa os filtros
       Dashboard.filters = new SidebarFilters(Dashboard.data);
-
       // Configura o callback quando filtros mudam
       Dashboard.filters.onFilterChange = (filters) => {
         updateDashboard(filters);
       };
-
       // Inicia o sistema de filtros
       Dashboard.filters.init();
 
+      // Inicializa gráficos
+      Dashboard.charts = new ChartManager();
+      Dashboard.charts.init(Dashboard.data);
+
       // Restante da inicialização...
       updateDate();
-      initializeCharts();
-      
-      // Carregar os dados iniciais
-      // loadInitialData();
       
   } catch (error) {
       console.error('Erro ao carregar o dashboard:', error);
       showErrorState();
   }
+});
+
+// 3. Ao sair da página/componente
+window.addEventListener('beforeunload', () => {
+  Dashboard.charts.destroy();
 });
 
 // Função para carregar os dados do JSON
@@ -75,17 +75,6 @@ function updateDate() {
   const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
   const formattedDate = now.toLocaleDateString('pt-BR', options);
   document.getElementById('update-date').textContent = `Atualizado em: ${formattedDate}`;
-}
-
-// ************************************* PAUSED ****************************************
-
-// Função para carregar dados iniciais
-function loadInitialData() {
-  // Atualizar cards de resumo
-  updateSummaryCards();
-  
-  // Atualizar tabela de produtos
-  updateProductsTable();
 }
 
 // Função para atualizar os cards de resumo
@@ -203,8 +192,6 @@ function updateProductsTable(filteredData = Dashboard.data) {
   });
 }
 
-// ************************************* PAUSED ****************************************
-
 // Função para inicializar os gráficos (será implementada mais tarde)
 function initializeCharts() {
   console.log('Inicializando gráficos...');
@@ -214,29 +201,32 @@ function initializeCharts() {
 // *****************************************************************************
 
 // Função para atualizar o dashboard com os filtros aplicados
-function updateDashboard() {
+function updateDashboard(filters) {
   // Obter os dados filtrados
-  const filteredData = getFilteredData();
+  const filteredData = getFilteredData(filters);
   
-  // Atualizar os componentes com os dados filtrados
+  // Atualiza componentes visuais
   updateSummaryCards(filteredData);
   updateProductsTable(filteredData);
-  updateCharts(filteredData);
+
+  // Atualiza gráficos
+  Dashboard.charts.update(filteredData);
+
 }
 
 // Função para obter dados filtrados
-function getFilteredData() {
+function getFilteredData(filters) {
   // Se nenhum filtro está aplicado, retornar todos os dados
-  if (!Dashboard.currentFilters.filial) {
+  if (!filters.filial) {
       return Dashboard.data;
   }
   
   // Encontrar a filial selecionada
-  const filial = Dashboard.data.filiais.find(f => f.id == Dashboard.currentFilters.filial);
+  const filial = Dashboard.data.filiais.find(f => f.id == filters.filial);
   if (!filial) return Dashboard.data;
   
   // Se apenas filial está filtrada
-  if (!Dashboard.currentFilters.setor) {
+  if (!filters.setor) {
       return {
           ...Dashboard.data,
           filiais: [filial],
@@ -245,7 +235,7 @@ function getFilteredData() {
   }
   
   // Encontrar o setor selecionado
-  const setor = filial.setores.find(s => s.id == Dashboard.currentFilters.setor);
+  const setor = filial.setores.find(s => s.id == filters.setor);
   if (!setor) return {
       ...Dashboard.data,
       filiais: [{
@@ -255,7 +245,7 @@ function getFilteredData() {
   };
   
   // Se apenas filial e setor estão filtrados
-  if (!Dashboard.currentFilters.departamento) {
+  if (!filters.departamento) {
       return {
           ...Dashboard.data,
           filiais: [{
@@ -267,7 +257,7 @@ function getFilteredData() {
   }
   
   // Encontrar o departamento selecionado
-  const departamento = setor.departamentos.find(d => d.id == Dashboard.currentFilters.departamento);
+  const departamento = setor.departamentos.find(d => d.id == filters.departamento);
   if (!departamento) return {
       ...Dashboard.data,
       filiais: [{
@@ -280,7 +270,7 @@ function getFilteredData() {
   };
   
   // Se apenas filial, setor e departamento estão filtrados
-  if (!Dashboard.currentFilters.secao) {
+  if (!filters.secao) {
       return {
           ...Dashboard.data,
           filiais: [{
@@ -297,7 +287,7 @@ function getFilteredData() {
   }
   
   // Encontrar a seção selecionada
-  const secao = departamento.secoes.find(s => s.id == Dashboard.currentFilters.secao);
+  const secao = departamento.secoes.find(s => s.id == filters.secao);
   if (!secao) return {
       ...Dashboard.data,
       filiais: [{
@@ -330,11 +320,4 @@ function getFilteredData() {
           // Aqui você pode adicionar mais condições para filtrar por seção se necessário
       )
   };
-}
-
-
-// Adicionar esta nova função (implementaremos os gráficos depois)
-function updateCharts(filteredData) {
-  console.log('Atualizando gráficos com dados filtrados...');
-  // Implementação virá depois
 }
