@@ -29,38 +29,34 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nível</label>
-                        <select class="w-full border-gray-300 rounded-md shadow-sm">
-                            <option>Loja</option>
-                            <option>Setor</option>
-                            <option>Departamento</option>
-                            <option>Seção</option>
+                        <select id="comparison-level" class="w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="loja">Loja</option>
+                            <option value="setor">Setor</option>
+                            <option value="departamento">Departamento</option>
+                            <option value="secao">Seção</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Item</label>
-                        <select class="w-full border-gray-300 rounded-md shadow-sm">
-                            <option>Todos</option>
-                            <option>ELETRO BRASIL LTDA</option>
-                            <option>REPOSICAO</option>
-                            <option>LIMPEZA</option>
-                            <option>ACESSORIO P/ ROUPA</option>
+                        <select id="comparison-item" class="w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="all">Todos</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Métrica</label>
-                        <select class="w-full border-gray-300 rounded-md shadow-sm">
-                            <option>Venda Líquida</option>
-                            <option>Lucro Líquido</option>
-                            <option>Margem de Lucro</option>
-                            <option>Quantidade Vendida</option>
+                        <select id="comparison-metric" class="w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="venda_liq">Venda Líquida</option>
+                            <option value="lucro_liq">Lucro Líquido</option>
+                            <option value="margem">Margem de Lucro</option>
+                            <option value="quantidade">Quantidade Vendida</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-                        <select class="w-full border-gray-300 rounded-md shadow-sm">
-                            <option>Anual</option>
-                            <option>Mensal</option>
-                            <option>Trimestral</option>
+                        <select id="comparison-period" class="w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="annual">Anual</option>
+                            <option value="monthly">Mensal</option>
+                            <option value="quarterly">Trimestral</option>
                         </select>
                     </div>
                 </div>
@@ -125,109 +121,11 @@
         </div>
     </div>
 
-    <script>
-        // Gráfico de Comparação Anual
-        const annualCtx = document.getElementById('annualComparisonChart').getContext('2d');
-        const annualChart = new Chart(annualCtx, {
-            type: 'bar',
-            data: {
-                labels: ['2023', '2024', '2025'],
-                datasets: [{
-                    label: 'Venda Líquida',
-                    data: [13200000, 14520000, 16200000],
-                    backgroundColor: [
-                        'rgba(239, 68, 68, 0.7)',
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(16, 185, 129, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(239, 68, 68, 1)',
-                        'rgba(59, 130, 246, 1)',
-                        'rgba(16, 185, 129, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Gráfico de Crescimento
-        const growthCtx = document.getElementById('growthChart').getContext('2d');
-        const growthChart = new Chart(growthCtx, {
-            type: 'line',
-            data: {
-                labels: ['2023', '2024', '2025'],
-                datasets: [{
-                    label: 'Crescimento Anual',
-                    data: [0, 10, 11.6],
-                    borderColor: 'rgb(16, 185, 129)',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return value + '%';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Gráfico de Comparação Mensal
-        const monthlyCtx = document.getElementById('monthlyComparisonChart').getContext('2d');
-        const monthlyChart = new Chart(monthlyCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                datasets: [{
-                    label: '2023',
-                    data: [1100000, 1050000, 1150000, 1200000, 1250000, 1300000, 1350000, 1400000, 1300000, 1250000, 1400000, 1600000],
-                    borderColor: 'rgb(239, 68, 68)',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    tension: 0.3
-                },
-                {
-                    label: '2024',
-                    data: [1200000, 1150000, 1250000, 1300000, 1350000, 1400000, 1450000, 1500000, 1400000, 1350000, 1500000, 1700000],
-                    borderColor: 'rgb(59, 130, 246)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.3
-                },
-                {
-                    label: '2025',
-                    data: [1245678, 1180000, 1280000, 1350000, 1400000, 1450000, null, null, null, null, null, null],
-                    borderColor: 'rgb(16, 185, 129)',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.3,
-                    borderDash: [5, 5]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: false
-                    }
-                }
-            }
+    <script type="module">
+        import { ComparisonManager } from '/scripts/comparisonManager.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new ComparisonManager();
         });
     </script>
 </body>
