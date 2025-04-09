@@ -27,3 +27,23 @@ select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
+
+/* Efeito hover para itens da sidebar */
+.sidebar-nav a:hover {
+  transform: translateX(4px);
+  transition: all 0.2s ease;
+}
+
+/* Ícone de voltar */
+.back-icon {
+  transition: all 0.3s ease;
+}
+
+.back-icon:hover {
+  transform: translateX(-3px);
+}
+
+/* Item ativo na sidebar */
+.sidebar-nav .active {
+  box-shadow: inset 4px 0 0 0 #ffffff;
+}

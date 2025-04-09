@@ -9,9 +9,64 @@
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
-        <!-- Sidebar (igual à página principal) -->
+        <!-- Sidebar -->
         <div class="w-64 bg-blue-800 text-white p-4">
-            <!-- Mesmo sidebar da página principal -->
+            <div class="flex items-center mb-8">
+                <a href="index.html" class="flex items-center text-2xl font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Dashboard
+                </a>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="index.html" class="flex items-center p-2 hover:bg-blue-700 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span>Visão Geral</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="comparacao.html" class="flex items-center p-2 bg-blue-700 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <span>Comparação Anual</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="metas.html" class="flex items-center p-2 hover:bg-blue-700 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                            <span>Sugestão de Metas</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="mt-8">
+                <div class="text-sm uppercase text-blue-200 mb-2">Filtros</div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm mb-1">Filial</label>
+                        <select class="w-full bg-blue-700 border border-blue-600 rounded p-2 text-sm">
+                            <option value="">Todas Filiais</option>
+                            <option>ELETRO BRASIL LTDA</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm mb-1">Setor</label>
+                        <select class="w-full bg-blue-700 border border-blue-600 rounded p-2 text-sm" disabled>
+                            <option value="">Selecione uma filial primeiro</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Main Content -->
